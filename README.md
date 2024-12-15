@@ -13,6 +13,7 @@ This project is a simple weather app that lets you look at the current weather f
 
 ## Installation
 
+- Use this link [https://my-weather-app-uieh.onrender.com/](https://my-weather-app-uieh.onrender.com/) to get to deployed sit or if you want to use it on your own machine use following steps below.
 - copy either all the files from the repository to your computer or use your git bash terminal to clone the repository down to your own machine. 
 - make sure you have [node js](https://nodejs.org/en) and the package manager that comes with it.
 - run the following command in project folder terminal: "npm i" (don't include the quotation marks). This will download all the needed dependencies for the project

@@ -7,23 +7,28 @@ import WeatherService from '../../service/weatherService.js';
 // TODO: POST Request with city name to retrieve weather data
 router.post('/', (req, res) => {
   // TODO: GET weather data from city name***
-  WeatherService.getWeatherForCity(req.body.cityName).then((wet)=>{
-    console.log(wet);//test if you can see what city requested
-    res.json(wet);
-  });
+  WeatherService.getWeatherForCity(req.body.cityName).then((weather)=>{
+    console.log(weather);//test if you can see what city requested
+    res.json(weather);
+    return weather
+  }).then((weather)=>{
+    if (weather.length !== 0){
+      HistoryService.addCity(req.body.cityName);
+    }
+  })
   
   // TODO: save city to search history***
-  HistoryService.addCity(req.body.cityName);
+  
 });
 
 // TODO: GET search history
 router.get('/history', async (_req, res) => {
-  res.json(HistoryService.getCities());
+  HistoryService.getCities().then((cities)=>{res.json(cities)});
 });
 
 // * BONUS TODO: DELETE city from search history
-router.delete('/history/:id', async (req, _res) => {
-  HistoryService.removeCity(req.params.id);
+router.delete('/history/:id', async (req, res) => {
+  HistoryService.removeCity(req.params.id).then((id)=>{res.json(id)});
 });
 
 export default router;

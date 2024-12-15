@@ -8,26 +8,26 @@ interface Coordinates {
 }
 
 // TODO: Define a class for the Weather object
-class Weather { 
-  city?: string; 
-  date: string; 
-  icon: string; 
-  iconDescription: string; 
-  tempF: number; 
-  windSpeed: number; 
-  humidity: number; 
-  constructor(city: string, date: string, icon: string, iconDescription: string, tempF: number, windSpeed: number, humidity: number){
+class Weather {
+  city?: string;
+  date: string;
+  icon: string;
+  iconDescription: string;
+  tempF: number;
+  windSpeed: number;
+  humidity: number;
+  constructor(city: string, date: string, icon: string, iconDescription: string, tempF: number, windSpeed: number, humidity: number) {
     this.city = city;
-    this.date = date; 
-    this.icon = icon; 
-    this.iconDescription = iconDescription; 
-    this.tempF = tempF; 
-    this.windSpeed = windSpeed; 
-    this.humidity = humidity; 
+    this.date = date;
+    this.icon = icon;
+    this.iconDescription = iconDescription;
+    this.tempF = tempF;
+    this.windSpeed = windSpeed;
+    this.humidity = humidity;
   }
 
 }
-  
+
 
 
 // TODO: Complete the WeatherService class
@@ -46,10 +46,10 @@ class WeatherService {
   private async fetchLocationData(city: string): Promise<Coordinates> {
     const response = await fetch(`${this.baseURL}/geo/1.0/direct?q=${city}&limit=1&appid=${this.apiKey}`)//fetching geo location
     const obj = await response.json();
-    const coordinates: Coordinates = {lat: obj[0]['lat'], lon: obj[0]['lon']};
+    const coordinates: Coordinates = { lat: obj[0]['lat'], lon: obj[0]['lon'] };
     return coordinates;
   }
-   //TODO: Create destructureLocationData method
+  //TODO: Create destructureLocationData method
   //private destructureLocationData(locationData: Coordinates): Coordinates {}
   // TODO: Create buildGeocodeQuery method
   //private buildGeocodeQuery(): string {}
@@ -71,9 +71,9 @@ class WeatherService {
     const forecastArray: Weather[] = [currentWeather];// start the array
     const num: number[] = [7, 15, 23, 31, 39];//index numbers to find diffrent days of the week
     //creates all weather objects that get added to forecast array
-    forecastArray.push(...num.map((i)=>{
+    forecastArray.push(...num.map((i) => {
       console.log(i);
-      return new Weather('',weatherRawData.list[i].dt_txt, weatherRawData.list[i].weather[0].icon, weatherRawData.list[i].weather[0].description, Math.floor(((Number(weatherRawData.list[i].main.temp) - 273.15) * 1.8) + 32), weatherRawData.list[i].wind.speed, Number(weatherRawData.list[i].main.humidity));
+      return new Weather('', weatherRawData.list[i].dt_txt, weatherRawData.list[i].weather[0].icon, weatherRawData.list[i].weather[0].description, Math.floor(((Number(weatherRawData.list[i].main.temp) - 273.15) * 1.8) + 32), weatherRawData.list[i].wind.speed, Number(weatherRawData.list[i].main.humidity));
     }));
     return forecastArray;
 
@@ -81,11 +81,15 @@ class WeatherService {
   }
   // TODO: Complete getWeatherForCity method
   async getWeatherForCity(city: string) {
-    const coordinates: Coordinates = await this.fetchLocationData(city);
-    const weatherRawData = await this.fetchWeatherData(coordinates);
-    const currentWeather = this.parseCurrentWeather(city, weatherRawData);
-    return this.buildForecastArray(currentWeather, weatherRawData);
-    
+    try {
+      const coordinates: Coordinates = await this.fetchLocationData(city);
+      const weatherRawData = await this.fetchWeatherData(coordinates);
+      const currentWeather = this.parseCurrentWeather(city, weatherRawData);
+      return this.buildForecastArray(currentWeather, weatherRawData);
+    }
+    catch(err){
+      return [];
+    }
   }
 }
 
